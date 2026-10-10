@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Sama! 🎉</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Fira+Code:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --accent-cyan: #58a6ff;
+            --accent-purple: #bc8cff;
+            --accent-green: #3fb950;
+            --accent-pink: #f778ba;
+            --text-main: #c9d1d9;
+            --border-color: #30363d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Question Card Stage */
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        .avatar-box {
+            font-size: 60px;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .question-title {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .sub-text {
+            color: var(--accent-cyan);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            direction: ltr;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            min-height: 60px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #2ea043, #3fb950);
+            color: white;
+            box-shadow: 0 4px 15px rgba(63, 185, 80, 0.4);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.08);
+        }
+
+        .btn-no {
+            background: #da3633;
+            color: white;
+            position: absolute;
+            transition: all 0.2s ease-out;
+        }
+
+        /* Dashboard Container (Hidden Initially) */
+        .dashboard {
+            display: none;
+            max-width: 800px;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+
+        .dashboard.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .header-card {
+            background: linear-gradient(135deg, rgba(88,166,255,0.1), rgba(188,140,255,0.1));
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header-card h1 {
+            color: #fff;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(188,140,255,0.2);
+            color: var(--accent-purple);
+            border: 1px solid var(--accent-purple);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .card-title {
+            color: var(--accent-cyan);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .code-block {
+            background: #090d12;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            direction: ltr;
+            text-align: left;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .letter-content {
+            line-height: 1.8;
+            font-size: 1rem;
+            color: #e6edf3;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 12px;
+            background: var(--border-color);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+
+        .btn-action:hover {
+            background: var(--accent-cyan);
+            color: #000;
+        }
+
+        .dynamic-msg {
+            margin-top: 10px;
+            font-weight: 700;
+            color: var(--accent-pink);
+            min-height: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Stage 1: Question Stage -->
+    <div class="question-card" id="questionCard">
+        <div class="avatar-box">👑</div>
+        <h2 class="question-title">أنا غالي عليكي يا سما؟</h2>
+        <div class="sub-text">System.checkStatus("Sama_Friendship");</div>
+        
+        <div class="btn-group" id="btnGroup">
+            <button class="btn btn-yes" onclick="handleYes()">طبعاً طبعاً! ✨</button>
+            <button class="btn btn-no" id="noBtn" onmouseover="moveNoButton()" onclick="moveNoButton()">لأ 😜</button>
+        </div>
+    </div>
+
+    <!-- Stage 2: Main Celebration Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="header-card">
+            <h1>🎂 كل سنة وأنتِ طيبة يا سما! 🎉</h1>
+            <p style="color: #8b949e; font-size: 1.1rem;">أجدع وأقرب صحبة وأخت في الدنيا كلها 💫</p>
+            <div class="badge">STATUS: Verified BESTIE Forever 🚀</div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">📜 شهادة تقدير برمجية</div>
+                <div class="letter-content">
+                    عارف إني مبرمج وبقضي يومي قدام الكود، بس الأكيد إن وجودك في حياتي هو **أحسن Feature** اتضافت ليومي. شكراً إنك دايماً أجدع وأقرب حد ليا، ودايماً بتسمعيني وتسنديني!
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">⚡ Bestie Stats</div>
+                <div class="code-block">
+                    const Sama = {<br>
+                    &nbsp;&nbsp;role: "Best Friend",<br>
+                    &nbsp;&nbsp;kindness: "Infinity",<br>
+                    &nbsp;&nbsp;loyalty: 100,<br>
+                    &nbsp;&nbsp;isSpecial: true<br>
+                    };
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🎁 رسالة سريعة علشاني لمين؟</div>
+            <p style="color: #8b949e;">دوسي على الزرار ده كل ما تعوزي تفتكري مكانتك عندي:</p>
+            <button class="btn-action" onclick="generateMsg()">دوسي هنا ✨</button>
+            <div class="dynamic-msg" id="dynamicMsg"></div>
+        </div>
+    </div>
+
+    <script>
+        // Runaway "No" Button Logic
+        function moveNoButton() {
+            const noBtn = document.getElementById('noBtn');
+            const card = document.getElementById('questionCard');
+            
+            const cardRect = card.getBoundingClientRect();
+            
+            // Generate random positions within the card boundaries
+            const maxX = cardRect.width - noBtn.offsetWidth - 40;
+            const maxY = cardRect.height - noBtn.offsetHeight - 40;
+            
+            const randomX = Math.floor(Math.random() * maxX) - (maxX / 2);
+            const randomY = Math.floor(Math.random() * maxY) - (maxY / 2);
+            
+            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        // Handle "Yes" Button Click
+        function handleYes() {
+            // Trigger Confetti Explosion
+            confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 }
+            });
+
+            // Extra fireworks confetti
+            setTimeout(() => {
+                confetti({
+                    particleCount: 80,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 80,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+            }, 250);
+
+            // Hide Question Card and Show Dashboard
+            const questionCard = document.getElementById('questionCard');
+            const dashboard = document.getElementById('dashboard');
+
+            questionCard.style.display = 'none';
+            dashboard.classList.add('active');
+        }
+
+        // Messages Array for Interactive Button
+        const messages = [
+            "ربنا يديم وجودك يا أجدع صحبة في الدنيا! ❤️",
+            "سنة جديدة سعيدة عليكي وتحققي كل اللي بتتمنيه وأكتر! 🌟",
+            "دايماً غالية وأقرب حد ليا يا سما! 👑",
+            "وجودك بيخلي الأيام الأوفلاين أحلى وأروق بكتير! 🚀",
+            "كل سنة وأنتِ أختي وصاحبتي الجدعة! 🎉"
+        ];
+
+        let msgIndex = 0;
+        function generateMsg() {
+            const msgBox = document.getElementById('dynamicMsg');
+            msgBox.innerText = messages[msgIndex];
+            msgIndex = (msgIndex + 1) % messages.length;
+        }
+    </script>
+</body>
+</html>
